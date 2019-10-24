@@ -72,8 +72,8 @@ following steps are taken:
       1. Let `kValue` be `? Get(O, Pk)`.
       1. Let `selected` be `! ToBoolean(? Call(callbackfn, T, « kValue, k, O »))`.
       1. If `selected` is `false`, then
-      1. Perform `? CreateDataPropertyOrThrow(A, ! ToString(to), kValue)`.
-   1. Set `to` to `to + 1`.
+         1. Perform `? CreateDataPropertyOrThrow(A, ! ToString(to), kValue)`.
+         1. Set `to` to `to + 1`.
    1. Set `k` to `k + 1`.
 1. Return `A`.
 
