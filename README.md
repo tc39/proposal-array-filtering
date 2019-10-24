@@ -22,10 +22,18 @@ Motivation
 
 <dl>
   <dt>"Filtering in"</dt>
-  <dd>Implies that returning `true` would keep the current item.</dd>
+  <dd>
+
+  Implies that returning `true` would keep the current item.
+
+  </dd>
 
   <dt>"Filtering out"</dt>
-  <dd>Implies that returning `true` would remove the current item.</dd>
+  <dd>
+
+  Implies that returning `true` would remove the current item.
+
+  </dd>
 </dl>
 
 `Array.p.filter` acts as "filtering in". But when I think of the word
