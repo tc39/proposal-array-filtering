@@ -86,3 +86,5 @@ Related
 - Underscore
   - [`_.select`](https://underscorejs.org/#filter) (aliased to _.filter)
   - [`_.reject`](https://underscorejs.org/#reject)
+- Lodash
+  - [`_.reject`](https://lodash.com/docs/4.17.15#reject) ([700,000 downloads/week](https://www.npmjs.com/package/lodash.reject))
