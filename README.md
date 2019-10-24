@@ -83,3 +83,6 @@ Related
 - Ruby
   - [`Array#select`](https://ruby-doc.org/core-2.4.1/Array.html#method-i-select)
   - [`Array#reject`](https://ruby-doc.org/core-2.4.1/Array.html#method-i-reject)
+- Underscore
+  - [`_.select`](https://underscorejs.org/#filter) (aliased to _.filter)
+  - [`_.reject`](https://underscorejs.org/#reject)
