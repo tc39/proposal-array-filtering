@@ -1,7 +1,7 @@
 proposal-array-select-reject
 ============================
 
-A Stage 0 proposal to add `Array.prototype.select` and
+A Stage 1 proposal to add `Array.prototype.select` and
 `Array.prototype.reject`.
 
 ```js
