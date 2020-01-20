@@ -5,8 +5,10 @@
 <script src="./spec.js"></script>
 <pre class="metadata">
 title: Array Filtering
+status: proposal
 stage: 1
 contributors: Justin Ridgewell
+location: https://tc39.es/proposal-array-filtering/
 </pre>
 
 <emu-clause id="sec-scope">
