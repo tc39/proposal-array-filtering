@@ -1,27 +1,32 @@
-proposal-array-select-reject
-============================
+# proposal-array-filtering
 
-A Stage 1 proposal to add `Array.prototype.select` and
-`Array.prototype.reject`.
+A proposal to add `Array.prototype.filterOut`.
 
 ```js
 const array = [1, 2, 3, 4, 5];
 
-// Select is just an alias for Array.p.filter
-array.select(i => (i < 3)); // => [1, 2];
+// filter keeps the items that return true.
+array.filter(i => (i < 3)); // => [1, 2];
 
-// Reject does the opposite of select.
-array.reject(i => (i < 3)); // => [3, 4, 5];
+// filterOut removes the items that return true.
+array.filterOut(i => (i < 3)); // => [3, 4, 5];
 ```
 
-Motivation
-----------
+## Champions
 
-`Array.prototype.filter` is confusing. I constantly have to ask myself
-"am I filtering in, or filtering out the current item?".
+- Justin Ridgewell ([@jridgewell](https://github.com/jridgewell/))
+
+## Status
+
+Current [Stage](https://tc39.es/process-document/): 1
+
+## Motivation
+
+`Array.p.filter` is confusing. I constantly have to ask myself "am I
+keeping, or filtering out the current item?".
 
 <dl>
-  <dt>"Filtering in"</dt>
+  <dt>"Keeping"</dt>
   <dd>
 
   Implies that returning `true` would keep the current item.
@@ -36,55 +41,32 @@ Motivation
   </dd>
 </dl>
 
-`Array.p.filter` acts as "filtering in". But when I think of the word
+`Array.p.filter` acts as "keeping". But when I think of the word
 "filter", I think of "filtering out". So every time that I attempt to
 write an array filter, I end up writing the opposite of what I intended.
 
-`Array.p.select` fixes this confusion. You are _selecting_ the current
-item. Similarly, `Array.p.reject` means you are _rejecting_ the current
-item.
+`Array.p.filterOut` attempts to fix this confusion. By providing a
+clearly named filtering function that matches my intuition, I'm able
+what will happen when calling `filterOut`. And because it exists, I'm
+able to assume that `filter` does something different, so it must be
+"keep" version.
 
+## Ongoing Discussions
 
-Semantics
----------
+- [Supporting Data from HTTP Archive and GitHub Archive](https://github.com/jridgewell/proposal-array-filtering/issues/4)
+- [What should `filterOut` be called?](https://github.com/jridgewell/proposal-array-filtering/issues/6)
+- [Should `partition` be included?](https://github.com/jridgewell/proposal-array-filtering/issues/2)
 
-### `Array.prototype.select(callbackfn[, thisArg ])`
-
-The initial value of the `select` property is the same function object
-as the initial value of the `Array.prototype.filter` property.
-
-### `Array.prototype.reject(callbackfn[, thisArg ])`
-
-When the `reject` method is called with one or two arguments, the
-following steps are taken:
-
-1. Let `O` be `? ToObject(this value)`.
-1. Let `len` be `? LengthOfArrayLike(O)`.
-1. If `IsCallable(callbackfn)` is `false`, throw a `TypeError` exception.
-1. If `thisArg` is present, let `T` be `thisArg`; else let `T` be `undefined`.
-1. Let `A` be `? ArraySpeciesCreate(O, 0)`.
-1. Let `k` be 0.
-1. Let `to` be 0.
-1. Repeat, while `k` &lt; `len`
-   1. Let `Pk` be `! ToString(k)`.
-   1. Let `kPresent` be `? HasProperty(O, Pk)`.
-   1. If `kPresent` is `true`, then
-      1. Let `kValue` be `? Get(O, Pk)`.
-      1. Let `rejected` be `! ToBoolean(? Call(callbackfn, T, « kValue, k, O »))`.
-      1. If `rejected` is `false`, then
-         1. Perform `? CreateDataPropertyOrThrow(A, ! ToString(to), kValue)`.
-         1. Set `to` to `to + 1`.
-   1. Set `k` to `k + 1`.
-1. Return `A`.
-
-Related
--------
+## Related
 
 - Ruby
   - [`Array#select`](https://ruby-doc.org/core-2.4.1/Array.html#method-i-select)
   - [`Array#reject`](https://ruby-doc.org/core-2.4.1/Array.html#method-i-reject)
+  - [`Array#partition`](https://ruby-doc.org/core-2.5.1/Enumerable.html#method-i-partition)
 - Underscore
   - [`_.select`](https://underscorejs.org/#filter) (aliased to _.filter)
   - [`_.reject`](https://underscorejs.org/#reject)
+  - [`_.partition`](https://underscorejs.org/#partition)
 - Lodash
-  - [`_.reject`](https://lodash.com/docs/4.17.15#reject) ([700,000 downloads/week](https://www.npmjs.com/package/lodash.reject))
+  - [`_.reject`](https://lodash.com/docs/4.17.15#reject) ([700k downloads/week](https://www.npmjs.com/package/lodash.reject))
+  - [`_.partition`](https://lodash.com/docs/4.17.15#partition) ([18k downloads/week](https://www.npmjs.com/package/lodash.partition))
