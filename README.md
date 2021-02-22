@@ -51,6 +51,10 @@ what will happen when calling `filterOut`. And because it exists, I'm
 able to assume that `filter` does something different, so it must be
 "keep" version.
 
+## Polyfill
+
+A polyfill is available in the [core-js](https://github.com/zloirock/core-js) library. You can find it in the [ECMAScript proposals section](https://github.com/zloirock/core-js#array-filtering).
+
 ## Ongoing Discussions
 
 - [Supporting Data from HTTP Archive and GitHub Archive](https://github.com/jridgewell/proposal-array-filtering/issues/4)
