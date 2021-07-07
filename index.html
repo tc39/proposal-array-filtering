@@ -3,21 +3,21 @@
 <link rel="stylesheet" href="./spec.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <script src="./spec.js"></script>
-<title>Array Filtering</title><script type="application/json" id="menu-search-biblio">[{"type":"clause","id":"sec-scope","aoid":null,"title":"Scope","titleHTML":"Scope","number":"1","namespace":"https://tc39.es/proposal-array-filtering/","location":"","referencingIds":[],"key":"Scope"},{"type":"clause","id":"sec-array.prototype.filterOut","aoid":null,"title":"Array.prototype.filterOut ( callbackfn [ , thisArg ] )","titleHTML":"Array.prototype.filterOut ( <var>callbackfn</var> [ , <var>thisArg</var> ] )","number":"2.1","namespace":"https://tc39.es/proposal-array-filtering/","location":"","referencingIds":[],"key":"Array.prototype.filterOut ( callbackfn [ , thisArg ] )"},{"type":"clause","id":"sec-properties-of-the-array-prototype-object","aoid":null,"title":"Properties of the Array Prototype Object (22.1.3)","titleHTML":"Properties of the Array Prototype Object (<a href=\"https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object\">22.1.3</a>)","number":"2","namespace":"https://tc39.es/proposal-array-filtering/","location":"","referencingIds":[],"key":"Properties of the Array Prototype Object (22.1.3)"},{"type":"clause","id":"sec-copyright-and-software-license","aoid":null,"title":"Copyright & Software License","titleHTML":"Copyright &amp; Software License","number":"A","namespace":"https://tc39.es/proposal-array-filtering/","location":"","referencingIds":[],"key":"Copyright & Software License"}]</script><script>"use strict";
+<title>Array Filtering</title><script type="application/json" id="menu-search-biblio">[{"type":"clause","id":"sec-scope","aoid":null,"title":"Scope","titleHTML":"Scope","number":"1","namespace":"https://tc39.es/proposal-array-filtering/","location":"","referencingIds":[],"key":"Scope"},{"type":"clause","id":"sec-array.prototype.filterOut","aoid":null,"title":"Array.prototype.filterOut ( callbackfn [ , thisArg ] )","titleHTML":"Array.prototype.filterOut ( <var>callbackfn</var> [ , <var>thisArg</var> ] )","number":"2.1","namespace":"https://tc39.es/proposal-array-filtering/","location":"","referencingIds":[],"key":"Array.prototype.filterOut ( callbackfn [ , thisArg ] )"},{"type":"clause","id":"sec-array.prototype.groupby","aoid":null,"title":"Array.prototype.groupBy ( callbackfn [ , thisArg ] )","titleHTML":"Array.prototype.groupBy ( <var>callbackfn</var> [ , <var>thisArg</var> ] )","number":"2.2","namespace":"https://tc39.es/proposal-array-filtering/","location":"","referencingIds":[],"key":"Array.prototype.groupBy ( callbackfn [ , thisArg ] )"},{"type":"clause","id":"sec-properties-of-the-array-prototype-object","aoid":null,"title":"Properties of the Array Prototype Object (22.1.3)","titleHTML":"Properties of the Array Prototype Object (<a href=\"https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object\">22.1.3</a>)","number":"2","namespace":"https://tc39.es/proposal-array-filtering/","location":"","referencingIds":[],"key":"Properties of the Array Prototype Object (22.1.3)"},{"type":"clause","id":"sec-copyright-and-software-license","aoid":null,"title":"Copyright & Software License","titleHTML":"Copyright &amp; Software License","number":"A","namespace":"https://tc39.es/proposal-array-filtering/","location":"","referencingIds":[],"key":"Copyright & Software License"}]</script><script>"use strict";
 
 function Search(menu) {
   this.menu = menu;
   this.$search = document.getElementById('menu-search');
   this.$searchBox = document.getElementById('menu-search-box');
   this.$searchResults = document.getElementById('menu-search-results');
-  
+
   this.loadBiblio();
-  
+
   document.addEventListener('keydown', this.documentKeydown.bind(this));
-  
+
   this.$searchBox.addEventListener('keydown', debounce(this.searchBoxKeydown.bind(this), { stopPropagation: true }));
   this.$searchBox.addEventListener('keyup', debounce(this.searchBoxKeyup.bind(this), { stopPropagation: true }));
-  
+
   // Perform an initial search if the box is not empty.
   if (this.$searchBox.value) {
     this.search(this.$searchBox.value);
@@ -61,7 +61,7 @@ Search.prototype.searchBoxKeyup = function (e) {
   if (e.keyCode === 13 || e.keyCode === 9) {
     return;
   }
-  
+
   this.search(e.target.value);
 }
 
@@ -84,25 +84,23 @@ Search.prototype.triggerSearch = function (e) {
 // prefer shorter matches.
 function relevance(result, searchString) {
   var relevance = 0;
-  
+
   relevance = Math.max(0, 8 - result.match.chunks) << 7;
-  
+
   if (result.match.caseMatch) {
     relevance *= 2;
   }
-  
+
   if (result.match.prefix) {
     relevance += 2048
   }
-  
+
   relevance += Math.max(0, 255 - result.entry.key.length);
-  
+
   return relevance;
 }
 
 Search.prototype.search = function (searchString) {
-  var s = Date.now();
-
   if (searchString === '') {
     this.displayResults([]);
     this.hideSearch();
@@ -110,12 +108,12 @@ Search.prototype.search = function (searchString) {
   } else {
     this.showSearch();
   }
-  
+
   if (searchString.length === 1) {
     this.displayResults([]);
     return;
   }
-    
+
   var results;
 
   if (/^[\d\.]*$/.test(searchString)) {
@@ -126,7 +124,7 @@ Search.prototype.search = function (searchString) {
     });
   } else {
     results = [];
-    
+
     for (var i = 0; i < this.biblio.length; i++) {
       var entry = this.biblio[i];
       if (!entry.key) {
@@ -139,11 +137,11 @@ Search.prototype.search = function (searchString) {
         results.push({ entry: entry, match: match });
       }
     }
-  
+
     results.forEach(function (result) {
       result.relevance = relevance(result, searchString);
     });
-    
+
     results = results.sort(function (a, b) { return b.relevance - a.relevance });
 
   }
@@ -151,7 +149,7 @@ Search.prototype.search = function (searchString) {
   if (results.length > 50) {
     results = results.slice(0, 50);
   }
-  
+
   this.displayResults(results);
 }
 Search.prototype.hideSearch = function () {
@@ -168,7 +166,7 @@ Search.prototype.selectResult = function () {
   if ($first) {
     document.location = $first.getAttribute('href');
   }
-  
+
   this.$searchBox.value = '';
   this.$searchBox.blur();
   this.displayResults([]);
@@ -182,7 +180,7 @@ Search.prototype.selectResult = function () {
 Search.prototype.displayResults = function (results) {
   if (results.length > 0) {
     this.$searchResults.classList.remove('no-results');
-    
+
     var html = '<ul>';
 
     results.forEach(function (result) {
@@ -199,7 +197,7 @@ Search.prototype.displayResults = function (results) {
       } else if (entry.type === 'production') {
         text = entry.key;
         cssClass = 'prod';
-        id = entry.id;  
+        id = entry.id;
       } else if (entry.type === 'op') {
         text = entry.key;
         cssClass = 'op';
@@ -211,7 +209,7 @@ Search.prototype.displayResults = function (results) {
       }
 
       if (text) {
-        html += '<li class=menu-search-result-' + cssClass + '><a href="#' + id + '">' + text + '</a></li>'
+        html += '<li class=menu-search-result-' + cssClass + '><a href="#' + id + '">' + text + '</a></li>';
       }
     });
 
@@ -234,7 +232,7 @@ function Menu() {
   this.$toc = document.querySelector('#menu-toc > ol');
   this.$specContainer = document.getElementById('spec-container');
   this.search = new Search(this);
-  
+
   this._pinnedIds = {}; 
   this.loadPinEntries();
 
@@ -279,9 +277,9 @@ function Menu() {
                     && target.offsetHeight + target.scrollTop >= target.scrollHeight;
 
     if (offBottom) {
-		  e.preventDefault();
-	  }
-  })
+      e.preventDefault();
+    }
+  });
 }
 
 Menu.prototype.documentKeydown = function (e) {
@@ -308,7 +306,7 @@ Menu.prototype.revealInToc = function (path) {
     current[i].classList.remove('revealed');
     current[i].classList.remove('revealed-leaf');
   }
-  
+
   var current = this.$toc;
   var index = 0;
   while (index < path.length) {
@@ -319,7 +317,7 @@ Menu.prototype.revealInToc = function (path) {
         if (index === path.length - 1) {
           children[i].classList.add('revealed-leaf');
           var rect = children[i].getBoundingClientRect();
-          this.$toc.getBoundingClientRect().top
+          // this.$toc.getBoundingClientRect().top;
           var tocRect = this.$toc.getBoundingClientRect();
           if (rect.top + 10 > tocRect.bottom) {
             this.$toc.scrollTop = this.$toc.scrollTop + (rect.top - tocRect.bottom) + (rect.bottom - rect.top);
@@ -330,29 +328,27 @@ Menu.prototype.revealInToc = function (path) {
         current = children[i].querySelector('ol');
         index++;
         break;
-      }      
+      }
     }
-    
+
   }
 }
 
 function findActiveClause(root, path) {
   var clauses = new ClauseWalker(root);
   var $clause;
-  var found = false;
   var path = path || [];
-  
+
   while ($clause = clauses.nextNode()) {
     var rect = $clause.getBoundingClientRect();
-    var $header = $clause.children[0];
+    var $header = $clause.querySelector("h1");
     var marginTop = parseInt(getComputedStyle($header)["margin-top"]);
-    
+
     if ((rect.top - marginTop) <= 0 && rect.bottom > 0) {
-      found = true;
       return findActiveClause($clause, path.concat($clause)) || path;
     }
   }
-  
+
   return path;
 }
 
@@ -377,7 +373,7 @@ function ClauseWalker(root) {
     },
     false
     );
-  
+
   return treeWalker;
 }
 
@@ -460,7 +456,7 @@ Menu.prototype.loadPinEntries = function () {
   } catch (e) {
     return;
   }
-  
+
   var pinsString = window.localStorage.pinEntries;
   if (!pinsString) return;
   var pins = JSON.parse(pinsString);
@@ -595,12 +591,11 @@ function fuzzysearch (searchString, haystack, caseInsensitive) {
   var qlen = searchString.length;
   var chunks = 1;
   var finding = false;
-  var prefix = true;
-  
+
   if (qlen > tlen) {
     return false;
   }
-  
+
   if (qlen === tlen) {
     if (searchString === haystack) {
       return { caseMatch: true, chunks: 1, prefix: true };
@@ -610,7 +605,7 @@ function fuzzysearch (searchString, haystack, caseInsensitive) {
       return false;
     }
   }
-  
+
   outer: for (var i = 0, j = 0; i < qlen; i++) {
     var nch = searchString[i];
     while (j < tlen) {
@@ -624,12 +619,12 @@ function fuzzysearch (searchString, haystack, caseInsensitive) {
         finding = false;
       }
     }
-    
-    if (caseInsensitive) { return false }
-    
+
+    if (caseInsensitive) { return false; }
+
     return fuzzysearch(searchString.toLowerCase(), haystack.toLowerCase(), true);
   }
-  
+
   return { caseMatch: !caseInsensitive, chunks: chunks, prefix: j <= qlen };
 }
 
@@ -786,7 +781,6 @@ var referencePane = {
       var target = document.getElementById(id);
       var cid = findParentClauseId(target);
       var clause = menu.search.biblio.byId[cid];
-      var dupCount = 0;
       return { id: id, clause: clause }
     }).sort(function (a, b) {
       return sortByClauseNumber(a.clause, b.clause);
@@ -826,7 +820,7 @@ function sortByClauseNumber(c1, c2) {
     if (i >= c2c.length) {
       return 1;
     }
-    
+
     var c1 = c1c[i];
     var c2 = c2c[i];
     var c1cn = Number(c1);
@@ -986,16 +980,43 @@ emu-const {
 emu-val {
   font-weight: bold;
 }
-emu-alg ol, emu-alg ol ol ol ol {
-    list-style-type: decimal;
+
+/* depth 1 */
+emu-alg ol,
+/* depth 4 */
+emu-alg ol ol ol ol,
+emu-alg ol.nested-thrice,
+emu-alg ol.nested-twice ol,
+emu-alg ol.nested-once ol ol {
+  list-style-type: decimal;
 }
 
-emu-alg ol ol, emu-alg ol ol ol ol ol {
-    list-style-type: lower-alpha;
+/* depth 2 */
+emu-alg ol ol,
+emu-alg ol.nested-once,
+/* depth 5 */
+emu-alg ol ol ol ol ol,
+emu-alg ol.nested-four-times,
+emu-alg ol.nested-thrice ol,
+emu-alg ol.nested-twice ol ol,
+emu-alg ol.nested-once ol ol ol {
+  list-style-type: lower-alpha;
 }
 
-emu-alg ol ol ol, ol ol ol ol ol ol {
-    list-style-type: lower-roman;
+/* depth 3 */
+emu-alg ol ol ol,
+emu-alg ol.nested-twice,
+emu-alg ol.nested-once ol,
+/* depth 6 */
+emu-alg ol ol ol ol ol ol,
+emu-alg ol.nested-lots,
+emu-alg ol.nested-four-times ol,
+emu-alg ol.nested-thrice ol ol,
+emu-alg ol.nested-twice ol ol ol,
+emu-alg ol.nested-once ol ol ol ol,
+/* depth 7+ */
+emu-alg ol.nested-lots ol {
+  list-style-type: lower-roman;
 }
 
 emu-eqn {
@@ -1045,6 +1066,10 @@ emu-note > div.note-contents > p:first-of-type {
 emu-note > div.note-contents > p:last-of-type {
   margin-bottom: 0;
 }
+
+emu-table td code {
+  white-space: normal;
+} 
 
 emu-figure {
   display: block;
@@ -1820,13 +1845,12 @@ li.menu-search-result-term:before {
     display: none; 
   }
 }
-</style></head><body><div id="menu-toggle">☰</div><div id="menu-spacer"></div><div id="menu"><div id="menu-search"><input type="text" id="menu-search-box" placeholder="Search..."><div id="menu-search-results" class="inactive"></div></div><div id="menu-pins"><div class="menu-pane-header">Pins</div><ul id="menu-pins-list"></ul></div><div class="menu-pane-header">Table of Contents</div><div id="menu-toc"><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-scope" title="Scope"><span class="secnum">1</span> Scope</a></li><li><span class="item-toggle">◢</span><a href="#sec-properties-of-the-array-prototype-object" title="Properties of the Array Prototype Object (22.1.3)"><span class="secnum">2</span> Properties of the Array Prototype Object (</a><a href="https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object">22.1.3</a>)<ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-array.prototype.filterOut" title="Array.prototype.filterOut ( callbackfn [ , thisArg ] )"><span class="secnum">2.1</span> Array.prototype.filterOut ( <var>callbackfn</var> [ , <var>thisArg</var> ] )</a></li></ol></li><li><span class="item-toggle-none"></span><a href="#sec-copyright-and-software-license" title="Copyright &amp; Software License"><span class="secnum">A</span> Copyright &amp; Software License</a></li></ol></div></div><div id="spec-container"><h1 class="version first">Stage 1 Draft / January 20, 2020</h1><h1 class="title">Array Filtering</h1>
+</style></head><body><div id="menu-toggle">☰</div><div id="menu-spacer"></div><div id="menu"><div id="menu-search"><input type="text" id="menu-search-box" placeholder="Search..."><div id="menu-search-results" class="inactive"></div></div><div id="menu-pins"><div class="menu-pane-header">Pins</div><ul id="menu-pins-list"></ul></div><div class="menu-pane-header">Table of Contents</div><div id="menu-toc"><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-scope" title="Scope"><span class="secnum">1</span> Scope</a></li><li><span class="item-toggle">◢</span><a href="#sec-properties-of-the-array-prototype-object" title="Properties of the Array Prototype Object (22.1.3)"><span class="secnum">2</span> Properties of the Array Prototype Object (</a><a href="https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object">22.1.3</a>)<ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-array.prototype.filterOut" title="Array.prototype.filterOut ( callbackfn [ , thisArg ] )"><span class="secnum">2.1</span> Array.prototype.filterOut ( <var>callbackfn</var> [ , <var>thisArg</var> ] )</a></li><li><span class="item-toggle-none"></span><a href="#sec-array.prototype.groupby" title="Array.prototype.groupBy ( callbackfn [ , thisArg ] )"><span class="secnum">2.2</span> Array.prototype.groupBy ( <var>callbackfn</var> [ , <var>thisArg</var> ] )</a></li></ol></li><li><span class="item-toggle-none"></span><a href="#sec-copyright-and-software-license" title="Copyright &amp; Software License"><span class="secnum">A</span> Copyright &amp; Software License</a></li></ol></div></div><div id="spec-container"><h1 class="version first">Stage 1 Draft / July 7, 2021</h1><h1 class="title">Array Filtering</h1>
 
 <emu-clause id="sec-scope">
   <h1><span class="secnum">1</span> Scope</h1>
   <p>
-    This is the spec text of the  <a href="https://github.com/tc39/proposal-array-filtering/">Array Filtering proposal</a> in ECMAScript.
-  
+    This is the spec text of the <a href="https://github.com/tc39/proposal-array-filtering/">Array Filtering proposal</a> in ECMAScript.
   </p>
 </emu-clause>
 
@@ -1844,10 +1868,27 @@ li.menu-search-result-term:before {
       <p>The range of elements processed by <code>filterOut</code> is set before the first call to <var>callbackfn</var>. Elements which are appended to the array after the call to <code>filterOut</code> begins will not be visited by <var>callbackfn</var>. If existing elements of the array are changed their value as passed to <var>callbackfn</var> will be the value at the time <code>filterOut</code> visits them; elements that are deleted after the call to <code>filterOut</code> begins and before being visited are not visited.</p>
     </div></emu-note>
     <p>When the <code>filterOut</code> method is called with one or two arguments, the following steps are taken:</p>
-    <emu-alg><ol><li>Let <var>O</var> be ?&nbsp;<emu-xref aoid="ToObject" id="_ref_0"><a href="https://tc39.github.io/ecma262/#sec-toobject">ToObject</a></emu-xref>(<emu-val>this</emu-val> value).</li><li>Let <var>len</var> be ?&nbsp;LengthOfArrayLike(<var>O</var>).</li><li>If <emu-xref aoid="IsCallable" id="_ref_1"><a href="https://tc39.github.io/ecma262/#sec-iscallable">IsCallable</a></emu-xref>(<var>callbackfn</var>) is <emu-val>false</emu-val>, throw a <emu-val>TypeError</emu-val> exception.</li><li>Let <var>A</var> be ?&nbsp;<emu-xref aoid="ArraySpeciesCreate" id="_ref_2"><a href="https://tc39.github.io/ecma262/#sec-arrayspeciescreate">ArraySpeciesCreate</a></emu-xref>(<var>O</var>, 0).</li><li>Let <var>k</var> be 0.</li><li>Let <var>to</var> be 0.</li><li>Repeat, while <var>k</var> &lt; <var>len</var><ol><li>Let <var>Pk</var> be !&nbsp;<emu-xref aoid="ToString" id="_ref_3"><a href="https://tc39.github.io/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>k</var>).</li><li>Let <var>kPresent</var> be ?&nbsp;<emu-xref aoid="HasProperty" id="_ref_4"><a href="https://tc39.github.io/ecma262/#sec-hasproperty">HasProperty</a></emu-xref>(<var>O</var>, <var>Pk</var>).</li><li>If <var>kPresent</var> is <emu-val>true</emu-val>, then<ol><li>Let <var>kValue</var> be ?&nbsp;<emu-xref aoid="Get" id="_ref_5"><a href="https://tc39.github.io/ecma262/#sec-get-o-p">Get</a></emu-xref>(<var>O</var>, <var>Pk</var>).</li><li>Let <var>rejected</var> be !&nbsp;<emu-xref aoid="ToBoolean" id="_ref_6"><a href="https://tc39.github.io/ecma262/#sec-toboolean">ToBoolean</a></emu-xref>(? <emu-xref aoid="Call" id="_ref_7"><a href="https://tc39.github.io/ecma262/#sec-call">Call</a></emu-xref>(<var>callbackfn</var>, <var>thisArg</var>, « <var>kValue</var>, <var>k</var>, <var>O</var> »)).</li><li>If <var>rejected</var> is <emu-val>false</emu-val>, then<ol><li>Perform ?&nbsp;<emu-xref aoid="CreateDataPropertyOrThrow" id="_ref_8"><a href="https://tc39.github.io/ecma262/#sec-createdatapropertyorthrow">CreateDataPropertyOrThrow</a></emu-xref>(<var>A</var>, !&nbsp;<emu-xref aoid="ToString" id="_ref_9"><a href="https://tc39.github.io/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>to</var>), <var>kValue</var>).</li><li>Set <var>to</var> to <var>to</var> + 1.</li></ol></li></ol></li><li>Set <var>k</var> to <var>k</var> + 1.</li></ol></li><li>Return <var>A</var>.
-    </li></ol></emu-alg>
+    <emu-alg><ol><li>Let <var>O</var> be ?&nbsp;<emu-xref aoid="ToObject" id="_ref_0"><a href="https://tc39.es/ecma262/#sec-toobject">ToObject</a></emu-xref>(<emu-val>this</emu-val> value).</li><li>Let <var>len</var> be ?&nbsp;<emu-xref aoid="LengthOfArrayLike" id="_ref_1"><a href="https://tc39.es/ecma262/#sec-lengthofarraylike">LengthOfArrayLike</a></emu-xref>(<var>O</var>).</li><li>If <emu-xref aoid="IsCallable" id="_ref_2"><a href="https://tc39.es/ecma262/#sec-iscallable">IsCallable</a></emu-xref>(<var>callbackfn</var>) is <emu-val>false</emu-val>, throw a <emu-val>TypeError</emu-val> exception.</li><li>Let <var>A</var> be ?&nbsp;<emu-xref aoid="ArraySpeciesCreate" id="_ref_3"><a href="https://tc39.es/ecma262/#sec-arrayspeciescreate">ArraySpeciesCreate</a></emu-xref>(<var>O</var>, 0).</li><li>Let <var>k</var> be 0.</li><li>Let <var>to</var> be 0.</li><li>Repeat, while <var>k</var> &lt; <var>len</var><ol><li>Let <var>Pk</var> be !&nbsp;<emu-xref aoid="ToString" id="_ref_4"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>k</var>).</li><li>Let <var>kPresent</var> be ?&nbsp;<emu-xref aoid="HasProperty" id="_ref_5"><a href="https://tc39.es/ecma262/#sec-hasproperty">HasProperty</a></emu-xref>(<var>O</var>, <var>Pk</var>).</li><li>If <var>kPresent</var> is <emu-val>true</emu-val>, then<ol><li>Let <var>kValue</var> be ?&nbsp;<emu-xref aoid="Get" id="_ref_6"><a href="https://tc39.es/ecma262/#sec-get-o-p">Get</a></emu-xref>(<var>O</var>, <var>Pk</var>).</li><li>Let <var>rejected</var> be !&nbsp;<emu-xref aoid="ToBoolean" id="_ref_7"><a href="https://tc39.es/ecma262/#sec-toboolean">ToBoolean</a></emu-xref>(? <emu-xref aoid="Call" id="_ref_8"><a href="https://tc39.es/ecma262/#sec-call">Call</a></emu-xref>(<var>callbackfn</var>, <var>thisArg</var>, « <var>kValue</var>, <var>k</var>, <var>O</var> »)).</li><li>If <var>rejected</var> is <emu-val>false</emu-val>, then<ol><li>Perform ?&nbsp;<emu-xref aoid="CreateDataPropertyOrThrow" id="_ref_9"><a href="https://tc39.es/ecma262/#sec-createdatapropertyorthrow">CreateDataPropertyOrThrow</a></emu-xref>(<var>A</var>, !&nbsp;<emu-xref aoid="ToString" id="_ref_10"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>to</var>), <var>kValue</var>).</li><li>Set <var>to</var> to <var>to</var> + 1.</li></ol></li></ol></li><li>Set <var>k</var> to <var>k</var> + 1.</li></ol></li><li>Return <var>A</var>.</li></ol></emu-alg>
     <emu-note><span class="note">Note 2</span><div class="note-contents">
       <p>The <code>filterOut</code> function is intentionally generic; it does not require that its <emu-val>this</emu-val> value be an Array object. Therefore it can be transferred to other kinds of objects for use as a method.</p>
+    </div></emu-note>
+  </emu-clause>
+  </ins>
+
+  <ins class="block">
+  <emu-clause id="sec-array.prototype.groupby">
+    <h1><span class="secnum">2.2</span> Array.prototype.groupBy ( <var>callbackfn</var> [ , <var>thisArg</var> ] )</h1>
+    <emu-note><span class="note">Note 1</span><div class="note-contents">
+      <p><var>callbackfn</var> should be a function that accepts three arguments and returns a value that is coercible to a property. <code>groupBy</code> calls <var>callbackfn</var> once for each element in the array, in ascending order, and constructs a new object of arrays, where the property key is the return value and array is filled with the items that return that property key. <var>callbackfn</var> is called only for elements of the array which actually exist; it is not called for missing elements of the array.</p>
+      <p>If a <var>thisArg</var> parameter is provided, it will be used as the <emu-val>this</emu-val> value for each invocation of <var>callbackfn</var>. If it is not provided, <emu-val>undefined</emu-val> is used instead.</p>
+      <p><var>callbackfn</var> is called with three arguments: the value of the element, the index of the element, and the object being traversed.</p>
+      <p><code>groupBy</code> does not directly mutate the object on which it is called but the object may be mutated by the calls to <var>callbackfn</var>.</p>
+      <p>The range of elements processed by <code>groupBy</code> is set before the first call to <var>callbackfn</var>. Elements which are appended to the array after the call to <code>groupBy</code> begins will not be visited by <var>callbackfn</var>. If existing elements of the array are changed their value as passed to <var>callbackfn</var> will be the value at the time <code>groupBy</code> visits them; elements that are deleted after the call to <code>groupBy</code> begins and before being visited are not visited.</p>
+    </div></emu-note>
+    <p>When the <code>groupBy</code> method is called with one or two arguments, the following steps are taken:</p>
+    <emu-alg><ol><li>Let <var>O</var> be ?&nbsp;<emu-xref aoid="ToObject" id="_ref_11"><a href="https://tc39.es/ecma262/#sec-toobject">ToObject</a></emu-xref>(<emu-val>this</emu-val> value).</li><li>Let <var>len</var> be ?&nbsp;<emu-xref aoid="LengthOfArrayLike" id="_ref_12"><a href="https://tc39.es/ecma262/#sec-lengthofarraylike">LengthOfArrayLike</a></emu-xref>(<var>O</var>).</li><li>If <emu-xref aoid="IsCallable" id="_ref_13"><a href="https://tc39.es/ecma262/#sec-iscallable">IsCallable</a></emu-xref>(<var>callbackfn</var>) is <emu-val>false</emu-val>, throw a <emu-val>TypeError</emu-val> exception.</li><li>Let <var>k</var> be 0.</li><li>Let <var>obj</var> be !&nbsp;OrdinaryObjectCreate(%Object.prototype%).</li><li><emu-xref href="#assert"><a href="https://tc39.es/ecma262/#assert">Assert</a></emu-xref>: <var>obj</var> is an extensible ordinary object with no own properties.</li><li>Repeat, while <var>k</var> &lt; <var>len</var><ol><li>Let <var>Pk</var> be !&nbsp;<emu-xref aoid="ToString" id="_ref_14"><a href="https://tc39.es/ecma262/#sec-tostring">ToString</a></emu-xref>(<var>k</var>).</li><li>Let <var>kPresent</var> be ?&nbsp;<emu-xref aoid="HasProperty" id="_ref_15"><a href="https://tc39.es/ecma262/#sec-hasproperty">HasProperty</a></emu-xref>(<var>O</var>, <var>Pk</var>).</li><li>If <var>kPresent</var> is <emu-val>true</emu-val>, then<ol><li>Let <var>kValue</var> be ?&nbsp;<emu-xref aoid="Get" id="_ref_16"><a href="https://tc39.es/ecma262/#sec-get-o-p">Get</a></emu-xref>(<var>O</var>, <var>Pk</var>).</li><li>Let <var>propertyKey</var> be ?&nbsp;<emu-xref aoid="ToPropertyKey" id="_ref_17"><a href="https://tc39.es/ecma262/#sec-topropertykey">ToPropertyKey</a></emu-xref>(? <emu-xref aoid="Call" id="_ref_18"><a href="https://tc39.es/ecma262/#sec-call">Call</a></emu-xref>(<var>callbackfn</var>, <var>thisArg</var>, « <var>kValue</var>, <var>k</var>, <var>O</var> »)).</li><li>Let <var>seen</var> be ?&nbsp;<emu-xref aoid="HasProperty" id="_ref_19"><a href="https://tc39.es/ecma262/#sec-hasproperty">HasProperty</a></emu-xref>(<var>obj</var>, <var>propertyKey</var>).</li><li>If <var>seen</var> is <emu-val>true</emu-val>, then<ol><li>Let <var>arr</var> be !&nbsp;<emu-xref aoid="Get" id="_ref_20"><a href="https://tc39.es/ecma262/#sec-get-o-p">Get</a></emu-xref>(<var>obj</var>, <var>propertyKey</var>).</li></ol></li><li>Else<ol><li>Let <var>arr</var> be ?&nbsp;<emu-xref aoid="ArraySpeciesCreate" id="_ref_21"><a href="https://tc39.es/ecma262/#sec-arrayspeciescreate">ArraySpeciesCreate</a></emu-xref>(O, 0).</li><li>Perform !&nbsp;<emu-xref aoid="CreateDataPropertyOrThrow" id="_ref_22"><a href="https://tc39.es/ecma262/#sec-createdatapropertyorthrow">CreateDataPropertyOrThrow</a></emu-xref>(<var>obj</var>, <var>propertyKey</var>, <var>arr</var>).</li></ol></li><li>Perform ?&nbsp;<emu-xref aoid="Call" id="_ref_23"><a href="https://tc39.es/ecma262/#sec-call">Call</a></emu-xref>(%Array.prototype.push%, <var>arr</var>, <var>kValue</var>).</li></ol></li><li>Set <var>k</var> to <var>k</var> + 1.</li></ol></li><li>Return <var>obj</var>.</li></ol></emu-alg>
+    <emu-note><span class="note">Note 2</span><div class="note-contents">
+      <p>The <code>groupBy</code> function is intentionally generic; it does not require that its <emu-val>this</emu-val> value be an Array object. Therefore it can be transferred to other kinds of objects for use as a method.</p>
     </div></emu-note>
   </emu-clause>
   </ins>
@@ -1855,7 +1896,7 @@ li.menu-search-result-term:before {
       <h1><span class="secnum">A</span> Copyright &amp; Software License</h1>
       
       <h2>Copyright Notice</h2>
-      <p>© 2020 Justin Ridgewell</p>
+      <p>© 2021 Justin Ridgewell</p>
 
       <h2>Software License</h2>
       <p>All Software contained in this document ("Software") is protected by copyright and is being made available under the "BSD License", included below. This Software may be subject to third party rights (rights from parties other than Ecma International), including patent rights, and no licenses under such third party rights are granted under this license even if the third party concerned is a member of Ecma International. SEE THE ECMA CODE OF CONDUCT IN PATENT MATTERS AVAILABLE AT https://ecma-international.org/memento/codeofconduct.htm FOR INFORMATION REGARDING THE LICENSING OF PATENT CLAIMS THAT ARE REQUIRED TO IMPLEMENT ECMA INTERNATIONAL STANDARDS.</p>
