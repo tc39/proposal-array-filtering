@@ -1,6 +1,6 @@
 # proposal-array-filtering
 
-A proposal to add `Array.prototype.filterOut`.
+A proposal to add `Array.prototype.filterReject`.
 
 ```js
 const array = [1, 2, 3, 4, 5];
@@ -8,8 +8,8 @@ const array = [1, 2, 3, 4, 5];
 // filter keeps the items that return true.
 array.filter(i => (i < 3)); // => [1, 2];
 
-// filterOut removes the items that return true.
-array.filterOut(i => (i < 3)); // => [3, 4, 5];
+// filterReject removes the items that return true.
+array.filterReject(i => (i < 3)); // => [3, 4, 5];
 ```
 
 ## Champions
