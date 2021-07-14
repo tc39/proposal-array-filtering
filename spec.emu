@@ -77,17 +77,15 @@ location: https://tc39.es/proposal-array-filtering/
       1. Assert: _obj_ is an extensible ordinary object with no own properties.
       1. Repeat, while _k_ &lt; _len_
         1. Let _Pk_ be ! ToString(_k_).
-        1. Let _kPresent_ be ? HasProperty(_O_, _Pk_).
-        1. If _kPresent_ is *true*, then
-          1. Let _kValue_ be ? Get(_O_, _Pk_).
-          1. Let _propertyKey_ be ? ToPropertyKey(? Call(_callbackfn_, _thisArg_, &laquo; _kValue_, _k_, _O_ &raquo;)).
-          1. Let _seen_ be ? HasOwnProperty(_obj_, _propertyKey_).
-          1. If _seen_ is *true*, then
-            1. Let _arr_ be ! Get(_obj_, _propertyKey_).
-          1. Else
-            1. Let _arr_ be ? ArraySpeciesCreate(O, 0).
-            1. Perform ! CreateDataPropertyOrThrow(_obj_, _propertyKey_, _arr_).
-          1. Perform ? Call(%Array.prototype.push%, _arr_, _kValue_).
+        1. Let _kValue_ be ? Get(_O_, _Pk_).
+        1. Let _propertyKey_ be ? ToPropertyKey(? Call(_callbackfn_, _thisArg_, &laquo; _kValue_, _k_, _O_ &raquo;)).
+        1. Let _seen_ be ? HasOwnProperty(_obj_, _propertyKey_).
+        1. If _seen_ is *true*, then
+          1. Let _arr_ be ! Get(_obj_, _propertyKey_).
+        1. Else
+          1. Let _arr_ be ? ArraySpeciesCreate(O, 0).
+          1. Perform ! CreateDataPropertyOrThrow(_obj_, _propertyKey_, _arr_).
+        1. Perform ? Call(%Array.prototype.push%, _arr_, _kValue_).
         1. Set _k_ to _k_ + 1.
       1. Return _obj_.
     </emu-alg>
