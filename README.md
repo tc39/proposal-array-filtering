@@ -45,9 +45,9 @@ keeping, or filtering out the current item?".
 "filter", I think of "filtering out". So every time that I attempt to
 write an array filter, I end up writing the opposite of what I intended.
 
-`Array.p.filterOut` attempts to fix this confusion. By providing a
+`Array.p.filterReject` attempts to fix this confusion. By providing a
 clearly named filtering function that matches my intuition, I'm able
-what will happen when calling `filterOut`. And because it exists, I'm
+what will happen when calling `filterReject`. And because it exists, I'm
 able to assume that `filter` does something different, so it must be
 "keep" version.
 
